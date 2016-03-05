@@ -1,0 +1,88 @@
+---
+title: "Exploring the Nepal Earthquake 2015 data for prediction and analysis"
+author: "Team HCI"
+date: "March 3, 2016"
+output: html_document
+---
+  
+##Introduction
+  
+  This project involves exploring Nepal Earthquake 2015 data for prediction and analysis database. This database tracks the total death, injury, damage done by the earthquake by zonal regions. 
+
+## Loading the data
+
+### Load required libraries
+```{r echo=TRUE, tidy=TRUE, warning=FALSE, message=FALSE}
+
+
+affectedFig= read.csv("affected figures.csv", na = "NA")
+
+
+
+#get aggregate total affected fig for each zone
+totdeathbyzone <- aggregate(Tot_Deaths ~ ZONE, affectedFig, sum)
+totdeathbyzone <- totdeathbyzone[(totdeathbyzone$Tot_Deaths  !=0),]
+#tothousehold <- aggregate(Total.Household ~ ZONE, affectedFig, sum)
+
+tothousehold <- as.numeric(affectedFig$Total.Household)
+
+#totpopn <- aggregate(Total.Population ~ ZONE, affectedFig, sum)
+
+
+#get aggregate total affected fig for each zone
+#totinjured <- aggregate(Total_Injured ~ ZONE, affectedFig, sum)
+
+#open graphic device for plotting 
+#png("plot3.png")#, width=480, height=480)
+
+
+#dev.off() #close the graphical device
+
+
+```
+
+### Summary of Data
+Take a quick look at the data available. 
+
+```{r echo=TRUE}
+summary(affectedFig)
+```
+Above code is responsible for generating figure 3
+
+
+
+#### Results
+
+
+```{r echo=TRUE, tidy=TRUE}
+
+
+#Plot Fatalities
+ plot(affectedFig$ZONE, tothousehold/100000,  ylab="Total households in lakh", xlab = "Zone", main = "Total households zonewise for 2015 EQ") 
+
+#add legends to graph
+legend("topright", c("household", "Population", "Injured"), col=c("black", "red", "blue"), lty=1, lwd=1, bty="n")
+
+
+
+library(plotrix)
+slices <- totdeathbyzone$Tot_Deaths
+
+colors <- rainbow(length(slices))
+lbls <- totdeathbyzone$ZONE
+
+par(mai = c(0,0,0,0))
+layout(c(1,2),heights=c(0.6,1))
+plot.new()
+title(main="Pie Chart of death by zone ", line = -2)
+legend("bottomright",legend=lbls, cex=0.8, fill=colors)
+
+pie3D(slices,explode=0.2,
+       col= colors )
+
+
+```
+
+### Summary
+
+>From these data and graphs, we can further process for smart predictive analysis. Asking the right questions, using statistical inference, regression models for probability calcuation and other inference. 
